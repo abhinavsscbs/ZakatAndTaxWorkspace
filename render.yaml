@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: zakat-tax-workspace
+    runtime: docker
+    plan: starter
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    envVars:
+      - key: REQUIRE_AUTH
+        value: "1"
+      - key: APP_BASIC_AUTH_USER
+        sync: false
+      - key: APP_BASIC_AUTH_PASSWORD
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: COHERE_API_KEY
+        sync: false
+      - key: DEFAULT_PROVIDER
+        value: openai
+      - key: MAX_OUTPUT_TOKENS
+        value: "4096"
+    disk:
+      name: workspace-data
+      mountPath: /app/storage
+      sizeGB: 1
