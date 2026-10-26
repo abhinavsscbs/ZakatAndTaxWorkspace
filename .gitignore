@@ -1,0 +1,44 @@
+# Credentials and local environments
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+node_modules/
+frontend/dist/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+# Private runtime state and artifacts
+logs/
+data/
+output/
+assessment-results/
+replacement_dictionary.json
+*.lock
+!frontend/package-lock.json
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+*.jsonl
+*.log
+output.txt
+# Source documents and generated local benchmark inputs
+*.pdf
+*.doc
+*.docx
+*.xls
+*.xlsx
+*.csv
+*.pkl
+*.faiss
+*.zip
+*.txt
+!backend/requirements.txt
+scripts/fixtures/
+# Retained local reference projects; publish only the unified app
+ContractComparison/
+TaxAIchat/
+
