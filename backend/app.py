@@ -3,10 +3,11 @@ load_dotenv()
 import json
 import os
 from pathlib import Path
-from flask import Flask, jsonify, request, send_file
+from flask import Flask, jsonify, request, send_file, Response
 from flask import g, send_from_directory
 from werkzeug.exceptions import HTTPException
 import time
+import hmac
 from telemetry import begin, finish, event, step
 from providers import MODELS, ProviderError
 from knowledge import bp as knowledge_bp
@@ -25,6 +26,25 @@ app.register_blueprint(knowledge_bp)
 @app.before_request
 def start_request():
     begin()
+    # A single-workspace access gate for private deployments. The API and UI
+    # share the same origin; only the health endpoint is unauthenticated.
+    if os.getenv('REQUIRE_AUTH', '0') == '1' and request.path != '/api/health':
+        expected_user = os.getenv('APP_BASIC_AUTH_USER', '')
+        expected_password = os.getenv('APP_BASIC_AUTH_PASSWORD', '')
+        credentials = request.authorization
+        valid = (
+            bool(expected_user and expected_password)
+            and credentials is not None
+            and credentials.type.lower() == 'basic'
+            and hmac.compare_digest(credentials.username or '', expected_user)
+            and hmac.compare_digest(credentials.password or '', expected_password)
+        )
+        if not valid:
+            return Response(
+                'Authentication required',
+                401,
+                {'WWW-Authenticate': 'Basic realm="Zakat and Tax Workspace", charset="UTF-8"'},
+            )
     g.provider = request.headers.get('X-AI-Provider', os.getenv('DEFAULT_PROVIDER', 'openai'))
     if g.provider not in MODELS:
         raise ValueError('Provider must be openai or cohere')
