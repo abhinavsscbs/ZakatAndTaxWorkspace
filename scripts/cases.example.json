@@ -1,0 +1,8 @@
+[
+  {"id":"index-policy","task":"upload","file":"fixtures/reference.txt","doc_id":"benchmark-policy","tax_area":"VAT"},
+  {"id":"grounded-answer","task":"chat","query":"According to the synthetic policy, what is the VAT rate and filing deadline?","selected_doc_ids":["benchmark-policy"],"expected_terms":["15","Article"]},
+  {"id":"insufficient-evidence","task":"chat","query":"What is the Zakat threshold according to these sources?","selected_doc_ids":["benchmark-policy"],"expected_terms":[]},
+  {"id":"arabic-answer","task":"chat","query":"What is the VAT rate in the synthetic policy?","translate":"ar","selected_doc_ids":["benchmark-policy"]},
+  {"id":"changed-terms","task":"comparison","older":"fixtures/older.txt","newer":"fixtures/newer.txt","expected_terms":["120","15","30"]},
+  {"id":"contract-tax","task":"tax","file":"fixtures/newer.txt","expected_terms":["VAT"]}
+]
