@@ -169,7 +169,7 @@ sequenceDiagram
     User->>UI: Select sources and ask a question
     UI->>API: Question + source IDs + recent history
     API->>DB: Load matching sources and provider/model index
-    API->>Embed: Embed query; build missing source index if needed
+    API->>Embed: Embed query and build missing source index if needed
     API->>DB: Rank vectors using cosine similarity
     DB-->>API: Top six reference passages
     API->>LLM: Evidence + question + recent conversation
